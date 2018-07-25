@@ -54,7 +54,7 @@ services:
     labels:
      - traefik.enable=true
      - traefik.backend=miniflux
-     - traefik.frontend.rule=Host:traefik.0x2a.site
+     - traefik.frontend.rule=Host:sentry.0x2a.site
      - traefik.docker.network=proxy
      - traefik.port=9000
     networks:
