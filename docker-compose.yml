@@ -27,8 +27,9 @@ x-defaults: &defaults
     SENTRY_EMAIL_HOST: smtp
   volumes:
     - sentry-data:/var/lib/sentry/files
-
-
+  networks:
+    - sentry-internal
+    
 services:
   smtp:
     restart: unless-stopped
@@ -50,8 +51,15 @@ services:
 
   web:
     <<: *defaults
-    ports:
-      - '9000:9000'
+    labels:
+     - traefik.enable=true
+     - traefik.backend=miniflux
+     - traefik.frontend.rule=Host:traefik.0x2a.site
+     - traefik.docker.network=proxy
+     - traefik.port=9000
+    networks:
+     - proxy
+     - sentry-internal
 
   cron:
     <<: *defaults
@@ -65,3 +73,9 @@ services:
 volumes:
     sentry-data:
     sentry-postgres:
+    
+networks:
+  proxy:
+    external: true
+  sentry-internal:
+    external: false
